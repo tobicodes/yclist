@@ -1,0 +1,24 @@
+.my_svg{
+	border: solid darkslategray 2px;
+	margin-top: 20px
+}
+
+.my_div{
+	background-color: #222
+	
+}
+.tooltip{
+
+	position: absolute;
+    text-align: center;
+    width: 150px;
+    height: 40px;
+    padding: 1px;
+    font: 14px sans-serif;
+    font-weight: normal;
+    background: darkslategray;
+    border-radius: 50px;
+    pointer-events: none;
+    color:azure;
+
+}
