@@ -1,16 +1,17 @@
 import bs4
 import urllib.request
 import csv
+import math
 
 url = 'http://yclist.com'
 url_data = urllib.request.urlopen(url).read()
 soup = bs4.BeautifulSoup(url_data, "html.parser")
-startups = soup.select("#companies table tbody .operating")
+operating_startups = soup.select("#companies table tbody .operating")
 
-names = [val.select('td')[1].text for val in startups]
-urls = [val.select('td')[2].text for val in startups]
-all_urls = [val.select('td a')[0].text for val in startups if bool(val.select('td a')) and bool(val.select('td a')[0].text)]
-startup_descriptions = [val.select('td')[5].text for val in startups]
+names = [val.select('td')[1].text for val in operating_startups]
+urls = [val.select('td')[2].text for val in operating_startups]
+all_urls = [val.select('td a')[0].text for val in operating_startups if bool(val.select('td a')) and bool(val.select('td a')[0].text)]
+startup_descriptions = [val.select('td')[5].text for val in operating_startups]
 
 result = {}
 
@@ -36,23 +37,7 @@ with open('yclist.csv', 'w') as csvfile:
     for key in result:
         writer.writerow([key, result[key]])
 
-url_results = {}
 
-TLDs = [".com", ".ai",".io",".net",".org"]
-
-def url_trend_checker(websites, TLD):
-	return "{} companies with the '{}' TLD".format(len([url.find(TLD) for url in websites if url.find(TLD) > 0]),TLD)
-
-def url_trendy(websites, TLD):
-	if TLD not in url_results:
-		url_results[TLD] = len([website for website in websites if website.find(TLD) > 0])
-	return url_results
-
-with open('TLD.csv', 'a+') as csvfile:
-    writer = csv.writer(csvfile, delimiter=",")
-    writer.writerow(["Count","TLD"])
-    for key in url_results:
-    	writer.writerow([key,url_results[key]])
 
 buzzwords_per_company = {}   ## object that holds buzzword as key, and as a value: a list of companies that have that list
 
@@ -72,6 +57,128 @@ def create_array_per_buzzword(obj,keywords ):
 
 create_array_per_buzzword(buzzwords_per_company, keywords)
 
+## grabbing data for dead companies, and exited companies
+
+dead_companies = soup.select("#companies table tbody .dead")
+names_of_dead_companies = [val.select('td')[1].text for val in dead_companies]
+
+exited_companies = soup.select("#companies table tbody .exited")
+names_of_exited_companies = [val.select('td')[1].text for val in exited_companies]
+
+## total percent dead, exited and active
+percent_dead = math.floor(100*len(names_of_dead_companies)/(len(names_of_exited_companies) + len(names_of_dead_companies) + len(names)))
+percent_exited = math.floor(100*len(names_of_exited_companies)/(len(names_of_exited_companies) + len(names_of_dead_companies) + len(names)))
+percent_active = 100 - (percent_dead + percent_exited)
+
+## creating an object to have year name as key, and array as value arr:[num dead, num active, num exited]
+
+
+
+year_names = ["05","06", "07", "08", "09", "10", "11" ]
+
+all_comps = soup.select("#companies table tbody tr")
+names_of_all_comps = [val.select('td')[1].text for val in all_comps]
+classes_of_all_comps = [val.select('td')[3].text for val in all_comps]
+
+
+
+
+## creates object that has name of startup as key, and status of startup as value
+status_of_startups = {}
+
+def categorize_by_status():
+	for i, comp in enumerate(names_of_all_comps):
+			if names_of_all_comps[i] in names_of_exited_companies:
+				status_of_startups[comp] = "Exited"
+			elif names_of_all_comps[i] in names_of_dead_companies:
+				status_of_startups[comp] = "Dead"
+			else:
+				status_of_startups[comp] = "Active"
+	return status_of_startups		
+
+categorize_by_status()
+
+
+comps_by_year ={}
+
+def categorize_by_year(classes_of_all_comps, year):
+	arr = [0, 0, 0]
+	for i, comp in enumerate(classes_of_all_comps):
+		if year in comp:
+			if status_checker(names_of_all_comps[i],"Dead"):
+				arr[0] += 1
+				comps_by_year[year] = arr
+			elif status_checker(names_of_all_comps[i], "Active"):
+				arr[1] +=1
+				comps_by_year[year] = arr
+			elif status_checker(names_of_all_comps[i], "Exited"):
+				arr[2] +=1
+				comps_by_year[year] = arr
+	return arr
+
+def status_checker (company,status):
+	return status_of_startups[company] == status
+
+def execute_categorize_by_year(func, arr):
+	for val in arr:
+		categorize_by_year(classes_of_all_comps, val)
+
+execute_categorize_by_year(categorize_by_year,year_names)
+
+# comps_values = []
+# for key in comps_by_year:
+# 	comps_values.append(comps_by_year[key])
+
+# print(comps_by_year)
+print(comps_by_year)
+#year_names = ["05","06", "07", "08", "09", "10", "11" ]
+
+
+with open('startups_by_year.csv', 'a+') as csvfile:
+	data = ["Year", "Summary"]
+	writer = csv.writer(csvfile, delimiter=",")
+	writer = csv.DictWriter(csvfile, fieldnames=year_names)
+	writer.writerow(comps_by_year)
+
+    # for key in buzzwords_per_company:
+    # 	writer.writerow([key,buzzwords_per_company[key]])
+
+# with open('newfile.csv', 'a') as csvfile:
+#     data = ['name', 'fav_topic']
+#     writer = csv.DictWriter(csvfile, fieldnames=data)
+#     writer.writeheader() # this writes the first row with the column headings
+#     writer.writerow({
+#         'name': 'Elie',
+#         'fav_topic': 'Writing to CSVs!'     
+#     }) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 with open('companies.csv', 'a+') as csvfile:
     writer = csv.writer(csvfile, delimiter=",")
     for key in buzzwords_per_company:
@@ -82,24 +189,25 @@ with open('companies.csv', 'a+') as csvfile:
 
 
 
+
+
 # scraping crunchbase to get funding data
 # company_name = "airbnb"
-company_names = names
-for company_name in company_names:
-	url_two = "https://www.crunchbase.com/organization/{}#/entity".format(company_name.lower())
+# company_names = names
+# for company_name in company_names:
+# 	url_two = "https://www.crunchbase.com/organization/{}#/entity".format(company_name.lower())
 
-	req = urllib.request.Request(
-    url_two, 
-    headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-    }
-)
+# 	req = urllib.request.Request(
+#     url_two, 
+#     headers={
+#         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+#     }
+# )
 
-response = urllib.request.urlopen(req).read().decode('utf-8')
-soup_two = bs4.BeautifulSoup(response, "html.parser")
+# response = urllib.request.urlopen(req).read().decode('utf-8')
+# soup_two = bs4.BeautifulSoup(response, "html.parser")
 
-funding_amount = soup_two.select(".funding_amount")[0].text[1:]  ## returns 3.4B 
+# funding_amount = soup_two.select(".funding_amount")[0].text[1:]  ## returns 3.4B 
     
 
 
-# company_names = names ## note that names is a list of all 968 companies
