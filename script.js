@@ -9,7 +9,7 @@ var secondColumnIndices = [1,4,7,10,13,16,19]
 var thirdColumnIndices = [2,5,8,11,14,17,20]
     
 
-var startups_by_year = {   // generated these from Python script
+var startups_by_year = {   // generated these numbers from Python script
 	Year1: [2, 1, 5],
 	Year2: [9, 4, 4],
 	Year3: [11, 12, 9],
@@ -70,23 +70,23 @@ populateXData(summary_of_startups, circleData)
 
 
 function populateYdata(arr){
-		for (var i = 0; i < arr.length; i++){
-			if (i <=2){
-				arr[i][2] = yValues[0]
-			}else if( 3<= i && i <=5){
-				arr[i][2] = yValues[1]
-			}else if(6<= i  && i <=8){
-				arr[i][2] = yValues[2]
-			}else if(9<= i && i <=11){
-				arr[i][2] = yValues[3]
-			}else if(12<= i && i <=14){
-				arr[i][2] = yValues[4]
-			}else if(15<= i && i <=17){
-				arr[i][2] = yValues[5]
-			}else if(18<= i && i <=20){
-				arr[i][2] = yValues[6]
-			} else return 
-		}
+	for (var i = 0; i < arr.length; i++){
+		if (i <=2) {
+			arr[i][2] = yValues[0]
+		}else if( 3<= i && i <=5){
+			arr[i][2] = yValues[1]
+		}else if(6<= i  && i <=8){
+			arr[i][2] = yValues[2]
+		}else if(9<= i && i <=11){
+			arr[i][2] = yValues[3]
+		}else if(12<= i && i <=14){
+			arr[i][2] = yValues[4]
+		}else if(15<= i && i <=17){
+			arr[i][2] = yValues[5]
+		}else if(18<= i && i <=20){
+			arr[i][2] = yValues[6]
+		} else return 
+	}
 	return arr
 }
 
@@ -151,8 +151,7 @@ d3.select("svg")
           return "#98ff98"
         }
     })
-	
-// need a new array to hold "text to be displayd under each circle [text, Xposition, Yposition]"
+
 var textData = []
 
 populateXData(summary_of_startups, textData)  // Add X values to textData array of arrays
@@ -204,9 +203,9 @@ d3.select("svg")
     .selectAll("text")
 	.data(circleData)
 	.enter()
-	.append("text")     // This sections put my percentages on the screen
+	.append("text") 
 		.style("fill", "white")
-		.attr("x", d => d[1]-30)  // 50px is an adjustment factor that I'm using to center the text
+		.attr("x", d => d[1]-30)  
 	  	.attr("y", d=> d[2])
 	  	.text(function(d, i){
 	  		if (firstColumnIndices.includes(i)){
@@ -218,7 +217,7 @@ d3.select("svg")
 	  	  	})
 	  	  .attr("font-size", 20)
   	.select("text")
-	.data(myMasterArray)    // This section puts my Class Titles on the screen at the appropriate Y value
+	.data(myMasterArray)    
 	.enter()
 	.append("text")
 		.style("fill", "white")
