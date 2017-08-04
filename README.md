@@ -3,8 +3,8 @@
 
 ## About
 
-This project was a quick, fun exploration of D3.js. Using BeautifulSoup and Python, I scraped data from [YcList](yclist.com) to obtain 
-7 years worth of data (1,000 startups) that attended [YC](ycombinator.com) between 2005 and 2012.
+This project was a quick, fun exploration of D3.js. Using BeautifulSoup and Python, I scraped data from [YcList](http://yclist.com) to obtain 
+7 years worth of data (1,000 startups) that attended [YC](http://ycombinator.com) between 2005 and 2012.
 
 I categorised these startups into - % alive, % dead and % exited and saved these to a local CSV file.
 
@@ -23,6 +23,6 @@ This project was built with
 1. D3.js
 2. Python 
 3. BeautifulSoup
-4. [YcList](yclist.com)
+4. [YcList](httpp://yclist.com)
 5. Data is stored in local CSV files
 
