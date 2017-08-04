@@ -38,8 +38,7 @@ with open('yclist.csv', 'w') as csvfile:
         writer.writerow([key, result[key]])
 
 
-
-buzzwords_per_company = {}   ## object that holds buzzword as key, and as a value: a list of companies that have that list
+buzzwords_per_company = {}  
 
 def categorizer(names, buzzword, startup_descriptions):
 	arr	= []
@@ -57,7 +56,6 @@ def create_array_per_buzzword(obj,keywords ):
 
 create_array_per_buzzword(buzzwords_per_company, keywords)
 
-## grabbing data for dead companies, and exited companies
 
 dead_companies = soup.select("#companies table tbody .dead")
 names_of_dead_companies = [val.select('td')[1].text for val in dead_companies]
@@ -70,20 +68,12 @@ percent_dead = math.floor(100*len(names_of_dead_companies)/(len(names_of_exited_
 percent_exited = math.floor(100*len(names_of_exited_companies)/(len(names_of_exited_companies) + len(names_of_dead_companies) + len(names)))
 percent_active = 100 - (percent_dead + percent_exited)
 
-## creating an object to have year name as key, and array as value arr:[num dead, num active, num exited]
-
-
-
 year_names = ["05","06", "07", "08", "09", "10", "11" ]
 
 all_comps = soup.select("#companies table tbody tr")
 names_of_all_comps = [val.select('td')[1].text for val in all_comps]
 classes_of_all_comps = [val.select('td')[3].text for val in all_comps]
 
-
-
-
-## creates object that has name of startup as key, and status of startup as value
 status_of_startups = {}
 
 def categorize_by_status():
@@ -97,7 +87,6 @@ def categorize_by_status():
 	return status_of_startups		
 
 categorize_by_status()
-
 
 comps_by_year ={}
 
@@ -125,89 +114,13 @@ def execute_categorize_by_year(func, arr):
 
 execute_categorize_by_year(categorize_by_year,year_names)
 
-# comps_values = []
-# for key in comps_by_year:
-# 	comps_values.append(comps_by_year[key])
-
-# print(comps_by_year)
-print(comps_by_year)
-#year_names = ["05","06", "07", "08", "09", "10", "11" ]
-
-
 with open('startups_by_year.csv', 'a+') as csvfile:
 	data = ["Year", "Summary"]
 	writer = csv.writer(csvfile, delimiter=",")
 	writer = csv.DictWriter(csvfile, fieldnames=year_names)
 	writer.writerow(comps_by_year)
 
-    # for key in buzzwords_per_company:
-    # 	writer.writerow([key,buzzwords_per_company[key]])
-
-# with open('newfile.csv', 'a') as csvfile:
-#     data = ['name', 'fav_topic']
-#     writer = csv.DictWriter(csvfile, fieldnames=data)
-#     writer.writeheader() # this writes the first row with the column headings
-#     writer.writerow({
-#         'name': 'Elie',
-#         'fav_topic': 'Writing to CSVs!'     
-#     }) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 with open('companies.csv', 'a+') as csvfile:
     writer = csv.writer(csvfile, delimiter=",")
     for key in buzzwords_per_company:
     	writer.writerow([key,buzzwords_per_company[key]])
-
-
-
-
-
-
-
-
-# scraping crunchbase to get funding data
-# company_name = "airbnb"
-# company_names = names
-# for company_name in company_names:
-# 	url_two = "https://www.crunchbase.com/organization/{}#/entity".format(company_name.lower())
-
-# 	req = urllib.request.Request(
-#     url_two, 
-#     headers={
-#         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-#     }
-# )
-
-# response = urllib.request.urlopen(req).read().decode('utf-8')
-# soup_two = bs4.BeautifulSoup(response, "html.parser")
-
-# funding_amount = soup_two.select(".funding_amount")[0].text[1:]  ## returns 3.4B 
-    
-
-

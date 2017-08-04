@@ -158,7 +158,7 @@ var textData = []
 populateXData(summary_of_startups, textData)  // Add X values to textData array of arrays
 populateYdata(textData)						  // Add Y values to textData array of arrays
 
-// Changing the first value in array of arrays to be either "%Dead, %Alive or % Exited"
+// Changing the first value in array of arrays to be either "% Dead, % Alive or % Exited"
 
 for (var i = 0; i < textData.length; i++){
 	if (firstColumnIndices.includes(i)){
@@ -206,7 +206,7 @@ d3.select("svg")
 	.enter()
 	.append("text")     // This sections put my percentages on the screen
 		.style("fill", "white")
-		.attr("x", d => d[1]-35)  // 50px is an adjustment factor that I'm using to center the text
+		.attr("x", d => d[1]-30)  // 50px is an adjustment factor that I'm using to center the text
 	  	.attr("y", d=> d[2])
 	  	.text(function(d, i){
 	  		if (firstColumnIndices.includes(i)){
@@ -227,18 +227,3 @@ d3.select("svg")
 		.attr("y", d=> d.YValue)
 		.attr("font-size", 30)
 		.text((d,i) => d.Class)
-
-	// var allCircles = d3.selectAll("circle .allCircles")
-
-	// // d3.select("#danceButton")
-	// // 	.on("click", function(){
-	// // 		console.log("Hello")
-	// // 		allCircles
-	// // 			.transition()
-	// // 			.attr("x", 200 )
-	// // 			.attr("y", 200);
-
-
-	// // 	})
-
-
