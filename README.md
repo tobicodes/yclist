@@ -20,7 +20,9 @@ Simply fork and clone this repo and you have access to a local copy of the code 
 
 This project was built with 
 
-1. Yclist
+1. D3.js
 2. Python 
 3. BeautifulSoup
-4. Data is stored in local CSV files
+4. [YcList](yclist.com)
+5. Data is stored in local CSV files
+
