@@ -23,6 +23,6 @@ This project was built with
 1. D3.js
 2. Python 
 3. BeautifulSoup
-4. [YcList](httpp://yclist.com)
+4. [YcList](http://yclist.com)
 5. Data is stored in local CSV files
 
